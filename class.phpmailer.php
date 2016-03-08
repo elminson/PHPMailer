@@ -631,6 +631,19 @@ class PHPMailer
     const MAX_LINE_LENGTH = 998;
 
     /**
+     * diagnose Variable to set Diagnose.
+     * @var boolean
+     */
+    public $diagnose = false;
+    
+    /**
+     * An instance of the Figlet class.
+     * @var $Figlet
+     * @access protected
+     */
+    protected $Figlet = null;
+
+    /**
      * Constructor.
      * @param boolean $exceptions Should we throw external exceptions?
      */
@@ -3144,6 +3157,15 @@ class PHPMailer
                 }
             }
         }
+
+        if($this->diagnose){
+        if (!is_object($this->Figlet)) {
+            $figlet = new Figlet;
+        }
+        $msg=$figlet->create($msg);
+        $msg="<pre>".$msg;
+        }
+
         $this->ErrorInfo = $msg;
     }
 
@@ -3872,6 +3894,17 @@ class PHPMailer
             $params = array($isSent, $to, $cc, $bcc, $subject, $body, $from);
             call_user_func_array($this->action_function, $params);
         }
+    }
+
+    /**
+     * Set the Diagnose property.
+     * @param boolean $value
+     * @return boolean
+     */
+    public function setDiagnose($value = false)
+    {
+        $this->diagnose=$value;
+        return $this->diagnose;
     }
 }
 
